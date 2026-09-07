@@ -25,10 +25,25 @@
     input[type=range] { width:100%; accent-color:var(--blue); }
     select { width:100%; padding:10px; border:1px solid var(--line); border-radius:10px; background:#fff; color:var(--ink); font:inherit; }
     .stage-card { padding:16px; border-radius:24px; box-shadow:0 18px 40px rgba(23,32,51,.09); }
-    #stage { height:min(56vw,540px); min-height:330px; border-radius:17px; position:relative; overflow:hidden; background:radial-gradient(circle at center, #fff 0 3%, #f2f9fe 39%, #e0eefb 100%); border:1px solid #d9e6f8; }
-    #stage::before { content:""; position:absolute; inset:-30%; background:radial-gradient(ellipse at center,transparent 0 25%,rgba(57,119,237,.07) 25.4% 25.8%,transparent 26.2% 40%,rgba(88,214,207,.12) 40.4% 40.8%,transparent 41.2%); transform:rotate(-18deg); }
+    #stage { height:min(56vw,540px); min-height:330px; border-radius:17px; position:relative; overflow:hidden; background:#f7fafc; border:1px solid #d9e6f8; }
+    #stage::before { content:""; position:absolute; inset:0; background:radial-gradient(circle at 50% 45%,rgba(255,255,255,.72),transparent 58%); }
+    #stage.bg-warm { background:#fcf8ef; border-color:#eee1c9; }
+    #stage.bg-cool { background:#eef7fb; border-color:#d5eaf2; }
+    #stage.bg-dim { background:#e8edf3; border-color:#d4dce6; }
+    #stage.bg-white { background:#fff; border-color:#e1e7ee; }
     #stage::after { content:"Focus gently"; position:absolute; left:0; right:0; bottom:18px; text-align:center; color:rgba(16,42,92,.42); font-size:12px; font-weight:650; letter-spacing:.11em; text-transform:uppercase; }
     #target { width:62px; height:62px; display:grid; place-items:center; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); border-radius:50%; background:radial-gradient(circle at 32% 25%,#9cf0e9 0 7%,#5cd9d2 8% 16%,#3977ed 45%,#183c84 100%); color:#fff; font-size:25px; font-weight:750; text-shadow:0 1px 2px rgba(0,0,0,.15); box-shadow:0 0 0 8px rgba(57,119,237,.12),0 9px 20px rgba(16,42,92,.28); z-index:1; }
+    #traceSvg { position:absolute; inset:7% 12%; width:76%; height:76%; overflow:visible; z-index:1; display:none; }
+    #tracePath { fill:none; stroke:#9bb8ed; stroke-width:6; stroke-linecap:round; stroke-linejoin:round; opacity:.68; }
+    #traceDot { fill:#3977ed; stroke:#fff; stroke-width:5; filter:drop-shadow(0 5px 6px rgba(16,42,92,.24)); }
+    .trace-active #target { display:none; }
+    .trace-active #traceSvg { display:block; }
+    .trace-active #stage::after { content:"Follow the dot as it traces the symbol"; }
+    #focusCue { display:none; position:absolute; inset:0 0 auto; z-index:2; place-items:center; padding-top:46px; text-align:center; pointer-events:none; color:var(--navy); font-weight:750; font-size:clamp(18px,3vw,26px); }
+    #focusCue span { display:block; margin-top:8px; color:var(--muted); font-size:14px; font-weight:500; }
+    .focus-active #target { width:34px; height:34px; font-size:0; box-shadow:0 0 0 7px rgba(57,119,237,.12),0 7px 18px rgba(16,42,92,.18); }
+    .focus-active #focusCue { display:grid; }
+    .focus-active #stage::after { content:"Use a comfortable distant object, not a bright light"; }
     .status { display:flex; justify-content:space-between; align-items:center; margin:13px 3px 0; color:var(--muted); font-size:14px; }
     .time { font-variant-numeric:tabular-nums; color:var(--ink); font-weight:700; }
     .actions { display:flex; justify-content:center; gap:10px; margin-top:20px; }
@@ -50,6 +65,9 @@
     #planButton { background:var(--blue); color:#fff; white-space:nowrap; box-shadow:0 5px 12px rgba(57,119,237,.2); }
     .plan-copy { display:flex; align-items:center; gap:12px; }
     .plan-orb { width:38px; height:38px; flex:0 0 38px; display:grid; place-items:center; border-radius:50%; color:var(--navy); font-weight:800; font-size:13px; background:radial-gradient(circle at 35% 30%,#fff 0 12%,#b8f0ec 13% 29%,#8eb5ff 30% 100%); }
+    .trace-settings { display:none; }
+    .trace-settings.visible { display:block; }
+    .mode-note { margin:11px 0 0; padding:10px 12px; border-radius:10px; background:#f1f7ff; color:var(--navy); font-size:13px; }
     @media(max-width:520px) { .rest-card,.plan-card{align-items:flex-start; flex-direction:column} }
     @media(max-width:760px) { main{padding:20px 14px 34px} header{margin-bottom:20px} #stage{height:68vw;min-height:290px}.tag{display:none} }
     @media(prefers-reduced-motion:reduce) { #target { transition:none!important; } }
@@ -63,7 +81,7 @@
         <h1>Follow the target<br>with steady eyes.</h1>
         <p class="intro">Keep your eyes on the letter inside the dot as it moves.</p>
         <div class="plan-card"><div class="plan-copy"><div class="plan-orb" id="planDay">01</div><div><strong id="planTitle">Today’s gentle plan</strong><span id="planDetail">Loading your recommended practice…</span></div></div><button id="planButton" type="button">Use today’s plan</button></div>
-        <div class="stage-card"><div id="stage" role="img" aria-label="Visual tracking area. A blue target with a letter moves along the selected path."><div id="target">A</div></div><div class="status"><span id="state">Ready when you are</span><span class="time" id="time">01:00</span></div><div class="speed-control"><label for="path">Practice path</label><select id="path"><option value="horizontal">Gentle · side to side</option><option value="vertical">Gentle · up and down</option><option value="loop">Moderate · loop</option><option value="figure8">Challenge · figure eight</option><option value="zigzag">Challenge · zigzag</option></select><label for="speed">Target speed <output id="speedValue">Slow</output></label><input id="speed" type="range" min="1" max="5" value="2" aria-label="Target speed"></div><div class="actions"><button id="start" type="button">Start session</button><button id="reset" type="button">Reset</button></div></div>
+        <div class="stage-card"><div id="stage" role="img" aria-label="Visual tracking area."><div id="target">A</div><div id="focusCue">Follow the center dot<span>It will gently grow and shrink</span></div><svg id="traceSvg" viewBox="0 0 100 100" aria-hidden="true"><path id="tracePath"></path><circle id="traceDot" r="6"></circle></svg></div><div class="status"><span id="state">Ready when you are</span><span class="time" id="time">01:00</span></div><div class="speed-control"><label for="exercise">Exercise</label><select id="exercise"><option value="move">Moving target</option><option value="trace">Trace a symbol</option><option value="focus">Focus-size pulse</option></select><label for="background">Exercise background</label><select id="background"><option value="soft">Soft light · recommended</option><option value="warm">Warm paper</option><option value="cool">Cool mist</option><option value="dim">Soft dim</option><option value="white">Plain white</option></select><div id="moveSettings"><label for="path">Practice path</label><select id="path"><option value="horizontal">Gentle · side to side</option><option value="vertical">Gentle · up and down</option><option value="loop">Moderate · loop</option><option value="figure8">Challenge · figure eight</option><option value="zigzag">Challenge · zigzag</option></select></div><div id="traceSettings" class="trace-settings"><label for="traceMode">Trace mode</label><select id="traceMode"><option value="timed">Timed · 60 seconds</option><option value="arcade">Arcade · 3-minute challenge</option></select><label for="symbols">Symbols</label><select id="symbols"><option value="letters">Alphabet</option><option value="numbers">Numbers</option></select><label for="order">Order</label><select id="order"><option value="ordered">In order</option><option value="random">Random</option></select><p class="mode-note" id="traceNote">Complete as many symbols as you can in one minute.</p></div><label for="speed">Target speed <output id="speedValue">Slow</output></label><input id="speed" type="range" min="1" max="8" value="2" aria-label="Target speed"></div><div class="actions"><button id="start" type="button">Start session</button><button id="reset" type="button">Reset</button></div></div>
       </section>
     </div>
     <section class="rest-card" aria-live="polite"><div><h2>Quick eye rest</h2><p id="restStep">A gentle 40-second break between sessions.</p></div><button id="restStart" type="button">Start break</button></section>
@@ -72,14 +90,21 @@
   <script>
     const stage=document.querySelector('#stage'), target=document.querySelector('#target'), start=document.querySelector('#start'), reset=document.querySelector('#reset');
     const time=document.querySelector('#time'), state=document.querySelector('#state');
-    const speed=document.querySelector('#speed'), speedValue=document.querySelector('#speedValue'), path=document.querySelector('#path');
+    const speed=document.querySelector('#speed'), speedValue=document.querySelector('#speedValue'), path=document.querySelector('#path'), background=document.querySelector('#background');
+    const exercise=document.querySelector('#exercise'), moveSettings=document.querySelector('#moveSettings'), traceSettings=document.querySelector('#traceSettings'), traceMode=document.querySelector('#traceMode'), symbols=document.querySelector('#symbols'), order=document.querySelector('#order'), traceNote=document.querySelector('#traceNote');
+    const tracePath=document.querySelector('#tracePath'), traceDot=document.querySelector('#traceDot');
+    const focusCue=document.querySelector('#focusCue');
     const restStart=document.querySelector('#restStart'), restStep=document.querySelector('#restStep');
     const planTitle=document.querySelector('#planTitle'), planDetail=document.querySelector('#planDetail'), planButton=document.querySelector('#planButton'), planDay=document.querySelector('#planDay');
     let duration=60;
-    let running=false, startedAt=0, raf=0;
+    let running=false, startedAt=0, raf=0, score=0, lastTraceIndex=-1;
     let restTimer=0;
     function fmt(s){return `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`}
-    function position(elapsed){ const rect=stage.getBoundingClientRect(), cx=rect.width/2, cy=rect.height/2, xAmp=rect.width*.34, yAmp=rect.height*.30; const a=elapsed*(.00035 + speed.value*.0002); let x=0,y=0;
+    const glyphs={A:'M18 88 L50 12 L82 88 M31 61 H69',B:'M22 12 V88 H56 Q82 88 82 69 Q82 52 58 50 H22 M57 50 Q78 47 78 31 Q78 12 56 12 H22',C:'M82 25 Q67 10 45 14 Q18 18 18 50 Q18 82 45 86 Q68 90 82 75',D:'M22 12 V88 H50 Q82 88 82 50 Q82 12 50 12 H22',E:'M78 12 H22 V88 H78 M22 50 H66',F:'M22 88 V12 H78 M22 50 H65',G:'M82 27 Q68 12 46 14 Q18 17 18 50 Q18 83 47 86 Q69 88 82 73 V53 H54',H:'M22 12 V88 M78 12 V88 M22 50 H78',I:'M25 12 H75 M50 12 V88 M25 88 H75',J:'M78 12 V69 Q78 88 55 88 Q30 88 25 70',K:'M22 12 V88 M78 12 L22 52 L80 88',L:'M22 12 V88 H78',M:'M18 88 V12 L50 55 L82 12 V88',N:'M20 88 V12 L80 88 V12',O:'M50 12 Q18 12 18 50 Q18 88 50 88 Q82 88 82 50 Q82 12 50 12',P:'M22 88 V12 H54 Q80 12 80 34 Q80 56 54 56 H22',Q:'M50 12 Q18 12 18 50 Q18 88 50 88 Q82 88 82 50 Q82 12 50 12 M61 68 L83 90',R:'M22 88 V12 H54 Q80 12 80 34 Q80 56 54 56 H22 M52 56 L82 88',S:'M78 22 Q63 10 42 14 Q19 18 20 36 Q21 48 50 52 Q80 56 80 71 Q80 89 55 88 Q32 88 18 77',T:'M16 12 H84 M50 12 V88',U:'M22 12 V66 Q22 88 50 88 Q78 88 78 66 V12',V:'M16 12 L50 88 L84 12',W:'M12 12 L30 88 L50 48 L70 88 L88 12',X:'M18 12 L82 88 M82 12 L18 88',Y:'M18 12 L50 50 L82 12 M50 50 V88',Z:'M18 12 H82 L18 88 H82',0:'M50 12 Q20 12 20 50 Q20 88 50 88 Q80 88 80 50 Q80 12 50 12',1:'M35 25 L50 12 V88 M34 88 H66',2:'M24 29 Q30 12 52 12 Q78 12 78 34 Q78 49 22 88 H80',3:'M24 22 Q36 12 54 14 Q78 16 76 36 Q75 48 56 50 Q80 51 78 70 Q76 89 52 88 Q32 88 22 77',4:'M72 88 V12 L20 62 H84',5:'M78 12 H28 L25 47 Q39 39 56 43 Q80 49 76 70 Q72 90 49 88 Q30 87 21 75',6:'M76 22 Q64 11 47 16 Q22 23 22 54 Q22 86 50 88 Q76 89 78 66 Q80 44 54 42 Q34 41 23 57',7:'M18 12 H82 L40 88',8:'M50 12 Q24 12 24 32 Q24 48 50 50 Q76 52 76 68 Q76 88 50 88 Q24 88 24 68 Q24 52 50 50 Q76 48 76 32 Q76 12 50 12',9:'M77 43 Q65 59 47 56 Q22 52 23 31 Q24 11 50 12 Q78 13 78 46 Q78 79 54 86'};
+    function sequence(){return symbols.value==='numbers'?'0123456789':'ABCDEFGHIJKLMNOPQRSTUVWXYZ'}
+    function traceSymbol(index){let set=sequence(), char=order.value==='random'?set[Math.floor(Math.random()*set.length)]:set[index%set.length]; tracePath.setAttribute('d',glyphs[char]); const p=tracePath.getPointAtLength(0);traceDot.setAttribute('cx',p.x);traceDot.setAttribute('cy',p.y);return char}
+    function updateExercise(){const tracing=exercise.value==='trace', focusing=exercise.value==='focus';stage.classList.toggle('trace-active',tracing);stage.classList.toggle('focus-active',focusing);moveSettings.style.display=(tracing||focusing)?'none':'block';traceSettings.classList.toggle('visible',tracing);duration=tracing&&traceMode.value==='arcade'?180:60;traceNote.textContent=traceMode.value==='arcade'?'Three minutes: the pace rises after every five symbols. See how long you can stay comfortable.':'Complete as many symbols as you can in one minute.';reset.click();}
+    function position(elapsed){ const rect=stage.getBoundingClientRect(), cx=rect.width/2, cy=rect.height/2, xAmp=rect.width*.34, yAmp=rect.height*.30; const a=elapsed*(.00025 + speed.value*.0002); let x=0,y=0;
       if(path.value==='horizontal'){x=Math.sin(a)*xAmp}
       if(path.value==='vertical'){y=Math.sin(a)*yAmp}
       if(path.value==='loop'){x=Math.cos(a)*xAmp;y=Math.sin(a)*yAmp}
@@ -87,11 +112,17 @@
       if(path.value==='zigzag'){x=((a%(Math.PI*2))/Math.PI-1)*xAmp;y=Math.asin(Math.sin(a*2))*yAmp*.55}
       target.style.left=`${cx+x}px`; target.style.top=`${cy+y}px`;
     }
-    function tick(now){ if(!running)return; const elapsed=now-startedAt, remaining=Math.max(0,duration-Math.floor(elapsed/1000)); position(elapsed); target.textContent='ABCDEFGH'[Math.floor(elapsed/5000)%8]; time.textContent=fmt(remaining); if(remaining<=0){running=false;start.textContent='Start session';state.textContent='Session complete — take a moment to rest your eyes.';return} raf=requestAnimationFrame(tick); }
+    function tick(now){ if(!running)return; const elapsed=now-startedAt, remaining=Math.max(0,duration-Math.floor(elapsed/1000));
+      if(exercise.value==='trace'){const arcadeBoost=traceMode.value==='arcade'?Math.floor(score/5)*250:0, symbolMs=Math.max(1500,4800-speed.value*300-arcadeBoost), index=Math.floor(elapsed/symbolMs); if(index!==lastTraceIndex){lastTraceIndex=index;traceSymbol(index);if(index>0){score=index;state.textContent=`${score} ${score===1?'symbol':'symbols'} completed`;}} const len=tracePath.getTotalLength(), p=tracePath.getPointAtLength(((elapsed%symbolMs)/symbolMs)*len);traceDot.setAttribute('cx',p.x);traceDot.setAttribute('cy',p.y);
+      }else if(exercise.value==='focus'){const pulse=(Math.sin(elapsed*.00155-Math.PI/2)+1)/2, size=Math.round(28+pulse*62);target.style.left='50%';target.style.top='50%';target.style.width=`${size}px`;target.style.height=`${size}px`;state.textContent='Following the size pulse';
+      }else{position(elapsed);target.textContent='ABCDEFGH'[Math.floor(elapsed/1500)%8];}
+      time.textContent=fmt(remaining); if(remaining<=0){running=false;start.textContent='Start session';state.textContent=exercise.value==='trace'?`Complete — ${score} symbols traced. Take a rest.`:'Session complete — take a moment to rest your eyes.';return} raf=requestAnimationFrame(tick); }
     start.addEventListener('click',()=>{ if(running){running=false;cancelAnimationFrame(raf);start.textContent='Resume session';state.textContent='Paused';return} running=true; startedAt=performance.now()-(duration-parseInt(time.textContent.slice(0,2))*60-parseInt(time.textContent.slice(3)))*1000; start.textContent='Pause';state.textContent='Following target';raf=requestAnimationFrame(tick); });
-    reset.addEventListener('click',()=>{running=false;cancelAnimationFrame(raf);target.style.left='50%';target.style.top='50%';target.textContent='A';time.textContent=fmt(duration);start.textContent='Start session';state.textContent='Ready when you are';});
-    function updateSpeed(){speedValue.value=['Very slow','Slow','Medium','Fast','Very fast'][speed.value-1]}
+    reset.addEventListener('click',()=>{running=false;cancelAnimationFrame(raf);score=0;lastTraceIndex=-1;target.style.left='50%';target.style.top='50%';target.style.width='';target.style.height='';target.textContent='A';focusCue.innerHTML='Follow the center dot<span>It will gently grow and shrink</span>';if(exercise.value==='trace')traceSymbol(0);time.textContent=fmt(duration);start.textContent='Start session';state.textContent='Ready when you are';});
+    function updateSpeed(){speedValue.value=['Very slow','Slow','Medium','Fast','Very fast','Expert','Advanced','Master'][speed.value-1]}
     speed.addEventListener('input',updateSpeed);
+    background.addEventListener('change',()=>{stage.classList.remove('bg-warm','bg-cool','bg-dim','bg-white');if(background.value!=='soft')stage.classList.add('bg-'+background.value);});
+    exercise.addEventListener('change',updateExercise); traceMode.addEventListener('change',updateExercise); symbols.addEventListener('change',()=>{lastTraceIndex=-1;traceSymbol(0)}); order.addEventListener('change',()=>{lastTraceIndex=-1;traceSymbol(0)});
     restStart.addEventListener('click',()=>{ clearInterval(restTimer); const steps=[['Blink slowly and fully',10],['Look at something across the room',20],['Rest your eyes closed while seated',10]]; let i=0, left=steps[0][1]; restStart.disabled=true; restStart.textContent='In progress';
       const render=()=>{restStep.textContent=`${steps[i][0]} — ${left}s`}; render();
       restTimer=setInterval(()=>{left--; if(left<0){i++; if(i===steps.length){clearInterval(restTimer);restStep.textContent='Break complete. Resume only when your eyes feel comfortable.';restStart.disabled=false;restStart.textContent='Start break';return}left=steps[i][1]} render()},1000);
