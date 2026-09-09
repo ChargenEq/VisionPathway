@@ -7,7 +7,7 @@
   <style>
     :root { --ink:#172033; --muted:#5c6880; --navy:#102a5c; --blue:#3977ed; --aqua:#58d6cf; --surface:#f5f8fc; --line:#dce4f2; --warm:#fff6e7; }
     * { box-sizing:border-box; }
-    body { margin:0; color:var(--ink); background:radial-gradient(circle at 10% 0%,#e3f4fa 0,transparent 27%),radial-gradient(circle at 91% 22%,#e8edff 0,transparent 25%),var(--surface); font:16px/1.45 Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif; }
+    body { margin:0; color:var(--ink); background:radial-gradient(circle at 10% 0%,#e3f4fa 0,transparent 27%),radial-gradient(circle at 91% 22%,#e8edff 0,transparent 25%),var(--surface); font:16px/1.45 Inter,ui-sans-serif,system-ui,sans-serif; }
     main { max-width:1100px; margin:auto; padding:34px 22px 52px; }
     header { display:flex; justify-content:space-between; gap:18px; align-items:center; margin-bottom:28px; }
     .brand { display:flex; align-items:center; gap:11px; font-weight:750; letter-spacing:-.04em; font-size:23px; }
@@ -15,8 +15,7 @@
     .mark::after { content:""; position:absolute; inset:10px; background:#fff; border-radius:50%; box-shadow:inset 0 0 0 2px #d9e7fa; }
     .tag { color:var(--muted); font-size:14px; }
     .layout { max-width:760px; margin:auto; }
-    .panel,.stage-card { background:#fff; border:1px solid var(--line); border-radius:20px; box-shadow:0 12px 30px rgba(23,32,51,.05); }
-    .panel { padding:22px; }
+    .stage-card { background:#fff; border:1px solid var(--line); border-radius:24px; padding:16px; box-shadow:0 18px 40px rgba(23,32,51,.09); }
     h1 { margin:0 0 8px; font-size:clamp(27px,4vw,42px); line-height:1.08; letter-spacing:-.045em; }
     h2 { font-size:15px; margin:0 0 15px; letter-spacing:-.01em; }
     .intro { color:var(--muted); margin:0 0 24px; }
@@ -24,7 +23,6 @@
     output { color:var(--blue); }
     input[type=range] { width:100%; accent-color:var(--blue); }
     select { width:100%; padding:10px; border:1px solid var(--line); border-radius:10px; background:#fff; color:var(--ink); font:inherit; }
-    .stage-card { padding:16px; border-radius:24px; box-shadow:0 18px 40px rgba(23,32,51,.09); }
     #stage { height:min(56vw,540px); min-height:330px; border-radius:17px; position:relative; overflow:hidden; background:#f7fafc; border:1px solid #d9e6f8; }
     #stage::before { content:""; position:absolute; inset:0; background:radial-gradient(circle at 50% 45%,rgba(255,255,255,.72),transparent 58%); }
     #stage.bg-warm { background:#fcf8ef; border-color:#eee1c9; }
@@ -43,7 +41,7 @@
     #focusCue span { display:block; margin-top:8px; color:var(--muted); font-size:14px; font-weight:500; }
     .focus-active #target { width:34px; height:34px; font-size:0; box-shadow:0 0 0 7px rgba(57,119,237,.12),0 7px 18px rgba(16,42,92,.18); }
     .focus-active #focusCue { display:grid; }
-    .focus-active #stage::after { content:"Use a comfortable distant object, not a bright light"; }
+    .focus-active #stage::after { content:"Follow the dot as it grows and shrinks"; }
     .status { display:flex; justify-content:space-between; align-items:center; margin:13px 3px 0; color:var(--muted); font-size:14px; }
     .time { font-variant-numeric:tabular-nums; color:var(--ink); font-weight:700; }
     .actions { display:flex; justify-content:center; gap:10px; margin-top:20px; }
@@ -51,13 +49,12 @@
     .speed-control label { margin:0 0 7px; }
     button { cursor:pointer; border:0; border-radius:11px; padding:12px 16px; font:650 15px inherit; }
     #start { flex:1; background:var(--navy); color:#fff; }
-    #reset { background:#eef3fc; color:var(--navy); }
-    .notice { margin-top:22px; background:var(--warm); border-left:4px solid #f1b74d; padding:13px 14px; border-radius:8px; color:#665027; font-size:13px; }
-    .notice { max-width:760px; margin:20px auto 0; }
+    #reset, #restStart { background:#eef3fc; color:var(--navy); }
+    .notice { max-width:760px; margin:20px auto 0; background:var(--warm); border-left:4px solid #f1b74d; padding:13px 14px; border-radius:8px; color:#665027; font-size:13px; }
     .rest-card { max-width:760px; margin:18px auto 0; padding:18px 20px; background:#fff; border:1px solid var(--line); border-radius:16px; display:flex; align-items:center; justify-content:space-between; gap:16px; }
     .rest-card h2 { margin:0 0 3px; }
     .rest-card p { margin:0; color:var(--muted); font-size:14px; }
-    #restStart { background:#eef3fc; color:var(--navy); white-space:nowrap; }
+    #restStart { white-space:nowrap; }
     #restStep { color:var(--navy); font-weight:700; }
     .plan-card { max-width:760px; margin:0 auto 18px; padding:15px 18px; border:1px solid #d7e5fb; border-radius:16px; background:linear-gradient(110deg,#edf8ff,#edf0ff); display:flex; align-items:center; justify-content:space-between; gap:14px; box-shadow:0 8px 20px rgba(57,119,237,.06); }
     .plan-card strong { display:block; color:var(--navy); }
@@ -68,73 +65,570 @@
     .trace-settings { display:none; }
     .trace-settings.visible { display:block; }
     .mode-note { margin:11px 0 0; padding:10px 12px; border-radius:10px; background:#f1f7ff; color:var(--navy); font-size:13px; }
-    @media(max-width:520px) { .rest-card,.plan-card{align-items:flex-start; flex-direction:column} }
-    @media(max-width:760px) { main{padding:20px 14px 34px} header{margin-bottom:20px} #stage{height:68vw;min-height:290px}.tag{display:none} }
-    @media(prefers-reduced-motion:reduce) { #target { transition:none!important; } }
+    @media(max-width:520px) { .rest-card,.plan-card { align-items:flex-start; flex-direction:column; } }
+    @media(max-width:760px) { main { padding:20px 14px 34px; } header { margin-bottom:20px; } #stage { height:68vw; min-height:290px; } .tag { display:none; } }
   </style>
 </head>
 <body>
   <main>
-    <header><div class="brand"><span class="mark" aria-hidden="true"></span>Focus Path</div><span class="tag">Visual tracking practice</span></header>
+    <header>
+      <div class="brand"><span class="mark" aria-hidden="true"></span>Focus Path</div>
+      <span class="tag">Visual tracking practice</span>
+    </header>
+
     <div class="layout">
       <section>
         <h1>Follow the target<br>with steady eyes.</h1>
         <p class="intro">Keep your eyes on the letter inside the dot as it moves.</p>
-        <div class="plan-card"><div class="plan-copy"><div class="plan-orb" id="planDay">01</div><div><strong id="planTitle">Today’s gentle plan</strong><span id="planDetail">Loading your recommended practice…</span></div></div><button id="planButton" type="button">Use today’s plan</button></div>
-        <div class="stage-card"><div id="stage" role="img" aria-label="Visual tracking area."><div id="target">A</div><div id="focusCue">Follow the center dot<span>It will gently grow and shrink</span></div><svg id="traceSvg" viewBox="0 0 100 100" aria-hidden="true"><path id="tracePath"></path><circle id="traceDot" r="6"></circle></svg></div><div class="status"><span id="state">Ready when you are</span><span class="time" id="time">01:00</span></div><div class="speed-control"><label for="exercise">Exercise</label><select id="exercise"><option value="move">Moving target</option><option value="trace">Trace a symbol</option><option value="focus">Focus-size pulse</option></select><label for="background">Exercise background</label><select id="background"><option value="soft">Soft light · recommended</option><option value="warm">Warm paper</option><option value="cool">Cool mist</option><option value="dim">Soft dim</option><option value="white">Plain white</option></select><div id="moveSettings"><label for="path">Practice path</label><select id="path"><option value="horizontal">Gentle · side to side</option><option value="vertical">Gentle · up and down</option><option value="loop">Moderate · loop</option><option value="figure8">Challenge · figure eight</option><option value="zigzag">Challenge · zigzag</option></select></div><div id="traceSettings" class="trace-settings"><label for="traceMode">Trace mode</label><select id="traceMode"><option value="timed">Timed · 60 seconds</option><option value="arcade">Arcade · 3-minute challenge</option></select><label for="symbols">Symbols</label><select id="symbols"><option value="letters">Alphabet</option><option value="numbers">Numbers</option></select><label for="order">Order</label><select id="order"><option value="ordered">In order</option><option value="random">Random</option></select><p class="mode-note" id="traceNote">Complete as many symbols as you can in one minute.</p></div><label for="speed">Target speed <output id="speedValue">Slow</output></label><input id="speed" type="range" min="1" max="8" value="2" aria-label="Target speed"></div><div class="actions"><button id="start" type="button">Start session</button><button id="reset" type="button">Reset</button></div></div>
+
+        <div class="plan-card">
+          <div class="plan-copy">
+            <div class="plan-orb" id="planDay">01</div>
+            <div>
+              <strong id="planTitle">Today’s gentle plan</strong>
+              <span id="planDetail">Loading your recommended practice…</span>
+            </div>
+          </div>
+          <button id="planButton" type="button">Use today’s plan</button>
+        </div>
+
+        <div class="stage-card">
+          <div id="stage" role="img" aria-label="Visual tracking area.">
+            <div id="target">A</div>
+            <div id="focusCue">Follow the center dot<span>It will gently grow and shrink</span></div>
+            <svg id="traceSvg" viewBox="0 0 100 100" aria-hidden="true">
+              <path id="tracePath"></path>
+              <path id="measurePath" fill="none" stroke="none"></path>
+              <circle id="traceDot" r="6"></circle>
+            </svg>
+          </div>
+
+          <div class="status">
+            <span id="state">Ready when you are</span>
+            <span class="time" id="time">01:00</span>
+          </div>
+
+          <div class="speed-control">
+            <label for="exercise">Exercise</label>
+            <select id="exercise">
+              <option value="move">Moving target</option>
+              <option value="trace">Trace a symbol</option>
+              <option value="focus">Focus-size pulse</option>
+            </select>
+
+            <label for="background">Exercise background</label>
+            <select id="background">
+              <option value="soft">Soft light · recommended</option>
+              <option value="warm">Warm paper</option>
+              <option value="cool">Cool mist</option>
+              <option value="dim">Soft dim</option>
+              <option value="white">Plain white</option>
+            </select>
+
+            <div id="moveSettings">
+              <label for="path">Practice path</label>
+              <select id="path">
+                <option value="horizontal">Gentle · side to side</option>
+                <option value="vertical">Gentle · up and down</option>
+                <option value="loop">Moderate · loop</option>
+                <option value="figure8">Challenge · figure eight</option>
+                <option value="zigzag">Challenge · smooth weave</option>
+              </select>
+            </div>
+
+            <div id="traceSettings" class="trace-settings">
+              <label for="traceMode">Trace mode</label>
+              <select id="traceMode">
+                <option value="timed">Timed · 60 seconds</option>
+                <option value="arcade">Arcade · 3-minute challenge</option>
+              </select>
+
+              <label for="symbols">Symbols</label>
+              <select id="symbols">
+                <option value="letters">Alphabet</option>
+                <option value="numbers">Numbers</option>
+              </select>
+
+              <label for="order">Order</label>
+              <select id="order">
+                <option value="ordered">In order</option>
+                <option value="random">Random</option>
+              </select>
+
+              <p class="mode-note" id="traceNote">Complete as many symbols as you can in one minute.</p>
+            </div>
+
+            <label for="speed">Target speed <output id="speedValue">Slow</output></label>
+            <input id="speed" type="range" min="1" max="8" value="2" aria-label="Target speed">
+          </div>
+
+          <div class="actions">
+            <button id="start" type="button">Start session</button>
+            <button id="reset" type="button">Reset</button>
+          </div>
+        </div>
       </section>
     </div>
-    <section class="rest-card" aria-live="polite"><div><h2>Quick eye rest</h2><p id="restStep">A gentle 40-second break between sessions.</p></div><button id="restStart" type="button">Start break</button></section>
-    <div class="notice"><strong>Use comfortably.</strong> Stop if you have eye pain, dizziness, headache, or double vision. This is a general practice tool—not a diagnosis or a substitute for an eye-care professional’s plan.</div>
+
+    <section class="rest-card" aria-live="polite">
+      <div>
+        <h2>Quick eye rest</h2>
+        <p id="restStep">A gentle 40-second break between sessions.</p>
+      </div>
+      <button id="restStart" type="button">Start break</button>
+    </section>
+
+    <div class="notice">
+      <strong>Use comfortably.</strong> Stop if you have eye pain, dizziness, headache, or double vision. This is a general practice tool—not a diagnosis or a substitute for an eye-care professional’s plan.
+    </div>
   </main>
+
   <script>
-    const stage=document.querySelector('#stage'), target=document.querySelector('#target'), start=document.querySelector('#start'), reset=document.querySelector('#reset');
-    const time=document.querySelector('#time'), state=document.querySelector('#state');
-    const speed=document.querySelector('#speed'), speedValue=document.querySelector('#speedValue'), path=document.querySelector('#path'), background=document.querySelector('#background');
-    const exercise=document.querySelector('#exercise'), moveSettings=document.querySelector('#moveSettings'), traceSettings=document.querySelector('#traceSettings'), traceMode=document.querySelector('#traceMode'), symbols=document.querySelector('#symbols'), order=document.querySelector('#order'), traceNote=document.querySelector('#traceNote');
-    const tracePath=document.querySelector('#tracePath'), traceDot=document.querySelector('#traceDot');
-    const focusCue=document.querySelector('#focusCue');
-    const restStart=document.querySelector('#restStart'), restStep=document.querySelector('#restStep');
-    const planTitle=document.querySelector('#planTitle'), planDetail=document.querySelector('#planDetail'), planButton=document.querySelector('#planButton'), planDay=document.querySelector('#planDay');
-    let duration=60;
-    let running=false, startedAt=0, raf=0, score=0, lastTraceIndex=-1;
-    let restTimer=0;
-    function fmt(s){return `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`}
-    const glyphs={A:'M18 88 L50 12 L82 88 M31 61 H69',B:'M22 12 V88 H56 Q82 88 82 69 Q82 52 58 50 H22 M57 50 Q78 47 78 31 Q78 12 56 12 H22',C:'M82 25 Q67 10 45 14 Q18 18 18 50 Q18 82 45 86 Q68 90 82 75',D:'M22 12 V88 H50 Q82 88 82 50 Q82 12 50 12 H22',E:'M78 12 H22 V88 H78 M22 50 H66',F:'M22 88 V12 H78 M22 50 H65',G:'M82 27 Q68 12 46 14 Q18 17 18 50 Q18 83 47 86 Q69 88 82 73 V53 H54',H:'M22 12 V88 M78 12 V88 M22 50 H78',I:'M25 12 H75 M50 12 V88 M25 88 H75',J:'M78 12 V69 Q78 88 55 88 Q30 88 25 70',K:'M22 12 V88 M78 12 L22 52 L80 88',L:'M22 12 V88 H78',M:'M18 88 V12 L50 55 L82 12 V88',N:'M20 88 V12 L80 88 V12',O:'M50 12 Q18 12 18 50 Q18 88 50 88 Q82 88 82 50 Q82 12 50 12',P:'M22 88 V12 H54 Q80 12 80 34 Q80 56 54 56 H22',Q:'M50 12 Q18 12 18 50 Q18 88 50 88 Q82 88 82 50 Q82 12 50 12 M61 68 L83 90',R:'M22 88 V12 H54 Q80 12 80 34 Q80 56 54 56 H22 M52 56 L82 88',S:'M78 22 Q63 10 42 14 Q19 18 20 36 Q21 48 50 52 Q80 56 80 71 Q80 89 55 88 Q32 88 18 77',T:'M16 12 H84 M50 12 V88',U:'M22 12 V66 Q22 88 50 88 Q78 88 78 66 V12',V:'M16 12 L50 88 L84 12',W:'M12 12 L30 88 L50 48 L70 88 L88 12',X:'M18 12 L82 88 M82 12 L18 88',Y:'M18 12 L50 50 L82 12 M50 50 V88',Z:'M18 12 H82 L18 88 H82',0:'M50 12 Q20 12 20 50 Q20 88 50 88 Q80 88 80 50 Q80 12 50 12',1:'M35 25 L50 12 V88 M34 88 H66',2:'M24 29 Q30 12 52 12 Q78 12 78 34 Q78 49 22 88 H80',3:'M24 22 Q36 12 54 14 Q78 16 76 36 Q75 48 56 50 Q80 51 78 70 Q76 89 52 88 Q32 88 22 77',4:'M72 88 V12 L20 62 H84',5:'M78 12 H28 L25 47 Q39 39 56 43 Q80 49 76 70 Q72 90 49 88 Q30 87 21 75',6:'M76 22 Q64 11 47 16 Q22 23 22 54 Q22 86 50 88 Q76 89 78 66 Q80 44 54 42 Q34 41 23 57',7:'M18 12 H82 L40 88',8:'M50 12 Q24 12 24 32 Q24 48 50 50 Q76 52 76 68 Q76 88 50 88 Q24 88 24 68 Q24 52 50 50 Q76 48 76 32 Q76 12 50 12',9:'M77 43 Q65 59 47 56 Q22 52 23 31 Q24 11 50 12 Q78 13 78 46 Q78 79 54 86'};
-    function sequence(){return symbols.value==='numbers'?'0123456789':'ABCDEFGHIJKLMNOPQRSTUVWXYZ'}
-    function traceSymbol(index){let set=sequence(), char=order.value==='random'?set[Math.floor(Math.random()*set.length)]:set[index%set.length]; tracePath.setAttribute('d',glyphs[char]); const p=tracePath.getPointAtLength(0);traceDot.setAttribute('cx',p.x);traceDot.setAttribute('cy',p.y);return char}
-    function updateExercise(){const tracing=exercise.value==='trace', focusing=exercise.value==='focus';stage.classList.toggle('trace-active',tracing);stage.classList.toggle('focus-active',focusing);moveSettings.style.display=(tracing||focusing)?'none':'block';traceSettings.classList.toggle('visible',tracing);duration=tracing&&traceMode.value==='arcade'?180:60;traceNote.textContent=traceMode.value==='arcade'?'Three minutes: the pace rises after every five symbols. See how long you can stay comfortable.':'Complete as many symbols as you can in one minute.';reset.click();}
-    function position(elapsed){ const rect=stage.getBoundingClientRect(), cx=rect.width/2, cy=rect.height/2, xAmp=rect.width*.34, yAmp=rect.height*.30; const a=elapsed*(.00025 + speed.value*.0002); let x=0,y=0;
-      if(path.value==='horizontal'){x=Math.sin(a)*xAmp}
-      if(path.value==='vertical'){y=Math.sin(a)*yAmp}
-      if(path.value==='loop'){x=Math.cos(a)*xAmp;y=Math.sin(a)*yAmp}
-      if(path.value==='figure8'){x=Math.sin(a)*xAmp;y=Math.sin(a*2)*yAmp*.55}
-      if(path.value==='zigzag'){x=((a%(Math.PI*2))/Math.PI-1)*xAmp;y=Math.asin(Math.sin(a*2))*yAmp*.55}
-      target.style.left=`${cx+x}px`; target.style.top=`${cy+y}px`;
+    const stage = document.querySelector('#stage');
+    const target = document.querySelector('#target');
+    const start = document.querySelector('#start');
+    const reset = document.querySelector('#reset');
+    const time = document.querySelector('#time');
+    const state = document.querySelector('#state');
+    const speed = document.querySelector('#speed');
+    const speedValue = document.querySelector('#speedValue');
+    const path = document.querySelector('#path');
+    const background = document.querySelector('#background');
+    const exercise = document.querySelector('#exercise');
+    const moveSettings = document.querySelector('#moveSettings');
+    const traceSettings = document.querySelector('#traceSettings');
+    const traceMode = document.querySelector('#traceMode');
+    const symbols = document.querySelector('#symbols');
+    const order = document.querySelector('#order');
+    const traceNote = document.querySelector('#traceNote');
+    const tracePath = document.querySelector('#tracePath');
+    const traceDot = document.querySelector('#traceDot');
+    const measurePath = document.querySelector('#measurePath');
+    const focusCue = document.querySelector('#focusCue');
+    const restStart = document.querySelector('#restStart');
+    const restStep = document.querySelector('#restStep');
+    const planTitle = document.querySelector('#planTitle');
+    const planDetail = document.querySelector('#planDetail');
+    const planButton = document.querySelector('#planButton');
+    const planDay = document.querySelector('#planDay');
+
+    let duration = 60;
+    let running = false;
+    let startedAt = 0;
+    let raf = 0;
+    let score = 0;
+    let lastTraceIndex = -1;
+    let traceCycleIndex = 0;
+    let traceCycleStart = 0;
+    let restTimer = 0;
+
+    function fmt(seconds) {
+      return `${String(Math.floor(seconds / 60)).padStart(2,'0')}:${String(seconds % 60).padStart(2,'0')}`;
     }
-    function tick(now){ if(!running)return; const elapsed=now-startedAt, remaining=Math.max(0,duration-Math.floor(elapsed/1000));
-      if(exercise.value==='trace'){const arcadeBoost=traceMode.value==='arcade'?Math.floor(score/5)*250:0, symbolMs=Math.max(1500,4800-speed.value*300-arcadeBoost), index=Math.floor(elapsed/symbolMs); if(index!==lastTraceIndex){lastTraceIndex=index;traceSymbol(index);if(index>0){score=index;state.textContent=`${score} ${score===1?'symbol':'symbols'} completed`;}} const len=tracePath.getTotalLength(), p=tracePath.getPointAtLength(((elapsed%symbolMs)/symbolMs)*len);traceDot.setAttribute('cx',p.x);traceDot.setAttribute('cy',p.y);
-      }else if(exercise.value==='focus'){const pulse=(Math.sin(elapsed*.00155-Math.PI/2)+1)/2, size=Math.round(28+pulse*62);target.style.left='50%';target.style.top='50%';target.style.width=`${size}px`;target.style.height=`${size}px`;state.textContent='Following the size pulse';
-      }else{position(elapsed);target.textContent='ABCDEFGH'[Math.floor(elapsed/1500)%8];}
-      time.textContent=fmt(remaining); if(remaining<=0){running=false;start.textContent='Start session';state.textContent=exercise.value==='trace'?`Complete — ${score} symbols traced. Take a rest.`:'Session complete — take a moment to rest your eyes.';return} raf=requestAnimationFrame(tick); }
-    start.addEventListener('click',()=>{ if(running){running=false;cancelAnimationFrame(raf);start.textContent='Resume session';state.textContent='Paused';return} running=true; startedAt=performance.now()-(duration-parseInt(time.textContent.slice(0,2))*60-parseInt(time.textContent.slice(3)))*1000; start.textContent='Pause';state.textContent='Following target';raf=requestAnimationFrame(tick); });
-    reset.addEventListener('click',()=>{running=false;cancelAnimationFrame(raf);score=0;lastTraceIndex=-1;target.style.left='50%';target.style.top='50%';target.style.width='';target.style.height='';target.textContent='A';focusCue.innerHTML='Follow the center dot<span>It will gently grow and shrink</span>';if(exercise.value==='trace')traceSymbol(0);time.textContent=fmt(duration);start.textContent='Start session';state.textContent='Ready when you are';});
-    function updateSpeed(){speedValue.value=['Very slow','Slow','Medium','Fast','Very fast','Expert','Advanced','Master'][speed.value-1]}
-    speed.addEventListener('input',updateSpeed);
-    background.addEventListener('change',()=>{stage.classList.remove('bg-warm','bg-cool','bg-dim','bg-white');if(background.value!=='soft')stage.classList.add('bg-'+background.value);});
-    exercise.addEventListener('change',updateExercise); traceMode.addEventListener('change',updateExercise); symbols.addEventListener('change',()=>{lastTraceIndex=-1;traceSymbol(0)}); order.addEventListener('change',()=>{lastTraceIndex=-1;traceSymbol(0)});
-    restStart.addEventListener('click',()=>{ clearInterval(restTimer); const steps=[['Blink slowly and fully',10],['Look at something across the room',20],['Rest your eyes closed while seated',10]]; let i=0, left=steps[0][1]; restStart.disabled=true; restStart.textContent='In progress';
-      const render=()=>{restStep.textContent=`${steps[i][0]} — ${left}s`}; render();
-      restTimer=setInterval(()=>{left--; if(left<0){i++; if(i===steps.length){clearInterval(restTimer);restStep.textContent='Break complete. Resume only when your eyes feel comfortable.';restStart.disabled=false;restStart.textContent='Start break';return}left=steps[i][1]} render()},1000);
+
+    const glyphs = {
+      A:'M18 88 L50 12 L82 88 M31 61 H69',
+      B:'M22 12 V88 H56 Q82 88 82 69 Q82 52 58 50 H22 M57 50 Q78 47 78 31 Q78 12 56 12 H22',
+      C:'M82 25 Q67 10 45 14 Q18 18 18 50 Q18 82 45 86 Q68 90 82 75',
+      D:'M22 12 V88 H50 Q82 88 82 50 Q82 12 50 12 H22',
+      E:'M78 12 H22 V88 H78 M22 50 H66',
+      F:'M22 88 V12 H78 M22 50 H65',
+      G:'M82 27 Q68 12 46 14 Q18 17 18 50 Q18 83 47 86 Q69 88 82 73 V53 H54',
+      H:'M22 12 V88 M78 12 V88 M22 50 H78',
+      I:'M25 12 H75 M50 12 V88 M25 88 H75',
+      J:'M78 12 V69 Q78 88 55 88 Q30 88 25 70',
+      K:'M22 12 V88 M78 12 L22 52 L80 88',
+      L:'M22 12 V88 H78',
+      M:'M18 88 V12 L50 55 L82 12 V88',
+      N:'M20 88 V12 L80 88 V12',
+      O:'M50 12 Q18 12 18 50 Q18 88 50 88 Q82 88 82 50 Q82 12 50 12',
+      P:'M22 88 V12 H54 Q80 12 80 34 Q80 56 54 56 H22',
+      Q:'M50 12 Q18 12 18 50 Q18 88 50 88 Q82 88 82 50 Q82 12 50 12 M61 68 L83 90',
+      R:'M22 88 V12 H54 Q80 12 80 34 Q80 56 54 56 H22 M52 56 L82 88',
+      S:'M78 22 Q63 10 42 14 Q19 18 20 36 Q21 48 50 52 Q80 56 80 71 Q80 89 55 88 Q32 88 18 77',
+      T:'M16 12 H84 M50 12 V88',
+      U:'M22 12 V66 Q22 88 50 88 Q78 88 78 66 V12',
+      V:'M16 12 L50 88 L84 12',
+      W:'M12 12 L30 88 L50 48 L70 88 L88 12',
+      X:'M18 12 L82 88 M82 12 L18 88',
+      Y:'M18 12 L50 50 L82 12 M50 50 V88',
+      Z:'M18 12 H82 L18 88 H82',
+      0:'M50 12 Q20 12 20 50 Q20 88 50 88 Q80 88 80 50 Q80 12 50 12',
+      1:'M35 25 L50 12 V88 M34 88 H66',
+      2:'M24 29 Q30 12 52 12 Q78 12 78 34 Q78 49 22 88 H80',
+      3:'M24 22 Q36 12 54 14 Q78 16 76 36 Q75 48 56 50 Q80 51 78 70 Q76 89 52 88 Q32 88 22 77',
+      4:'M72 88 V12 L20 62 H84',
+      5:'M78 12 H28 L25 47 Q39 39 56 43 Q80 49 76 70 Q72 90 49 88 Q30 87 21 75',
+      6:'M76 22 Q64 11 47 16 Q22 23 22 54 Q22 86 50 88 Q76 89 78 66 Q80 44 54 42 Q34 41 23 57',
+      7:'M18 12 H82 L40 88',
+      8:'M50 12 Q24 12 24 32 Q24 48 50 50 Q76 52 76 68 Q76 88 50 88 Q24 88 24 68 Q24 52 50 50 Q76 48 76 32 Q76 12 50 12',
+      9:'M77 43 Q65 59 47 56 Q22 52 23 31 Q24 11 50 12 Q78 13 78 46 Q78 79 54 86'
+    };
+
+    const randomTraceCharacters = new Map();
+
+    function sequence() {
+      return symbols.value === 'numbers' ? '0123456789' : 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    }
+
+    function characterFor(index) {
+      const set = sequence();
+      if (order.value === 'ordered') return set[index % set.length];
+
+      if (!randomTraceCharacters.has(index)) {
+        const previous = randomTraceCharacters.get(index - 1);
+        let next;
+        do {
+          next = set[Math.floor(Math.random() * set.length)];
+        } while (set.length > 1 && next === previous);
+        randomTraceCharacters.set(index, next);
+      }
+
+      return randomTraceCharacters.get(index);
+    }
+
+    function pointOn(d, progress) {
+      measurePath.setAttribute('d', d);
+      const length = measurePath.getTotalLength();
+      return measurePath.getPointAtLength(length * progress);
+    }
+
+    function traceParts(d) {
+      const strokes = d.match(/M[^M]+/g) || [d];
+      const parts = [];
+
+      for (let i = 0; i < strokes.length; i++) {
+        const stroke = strokes[i];
+        const startPoint = pointOn(stroke, 0);
+
+        measurePath.setAttribute('d', stroke);
+        const length = measurePath.getTotalLength();
+
+        parts.push({ kind:'stroke', d:stroke, from:0, to:1, length });
+
+        if (i < strokes.length - 1) {
+          parts.push({ kind:'stroke', d:stroke, from:1, to:0, length });
+
+          const nextStart = pointOn(strokes[i + 1], 0);
+          const distance = Math.hypot(nextStart.x - startPoint.x, nextStart.y - startPoint.y);
+
+          parts.push({
+            kind:'bridge',
+            from:startPoint,
+            to:nextStart,
+            length:distance
+          });
+        }
+      }
+
+      return parts;
+    }
+
+    function tracePoint(d, progress) {
+      const parts = traceParts(d);
+      const total = parts.reduce((sum, part) => sum + part.length, 0);
+      const at = Math.min(total, progress * total);
+      let used = 0;
+
+      for (const part of parts) {
+        if (at <= used + part.length || part === parts[parts.length - 1]) {
+          const local = part.length ? (at - used) / part.length : 0;
+
+          if (part.kind === 'bridge') {
+            return {
+              x:part.from.x + (part.to.x - part.from.x) * local,
+              y:part.from.y + (part.to.y - part.from.y) * local
+            };
+          }
+
+          return pointOn(part.d, part.from + (part.to - part.from) * local);
+        }
+
+        used += part.length;
+      }
+    }
+
+    function traceRate() {
+      return [52,70,92,120,155,195,240,290][speed.value - 1];
+    }
+
+    function traceTiming(index) {
+      const current = glyphs[characterFor(index)];
+      const rate = traceRate();
+      const drawMs = traceParts(current).reduce((sum, part) => sum + part.length, 0) / rate * 1000;
+
+      return { current, drawMs, total:drawMs };
+    }
+
+    function traceSymbol(index) {
+      const char = characterFor(index);
+      const d = glyphs[char];
+      tracePath.setAttribute('d', d);
+
+      const p = pointOn(d, 0);
+      traceDot.setAttribute('cx', p.x);
+      traceDot.setAttribute('cy', p.y);
+    }
+
+    function updateExercise() {
+      const tracing = exercise.value === 'trace';
+      const focusing = exercise.value === 'focus';
+
+      stage.classList.toggle('trace-active', tracing);
+      stage.classList.toggle('focus-active', focusing);
+      moveSettings.style.display = (tracing || focusing) ? 'none' : 'block';
+      traceSettings.classList.toggle('visible', tracing);
+
+      duration = tracing && traceMode.value === 'arcade' ? 180 : 60;
+
+      traceNote.textContent = traceMode.value === 'arcade'
+        ? 'Three minutes: complete as many symbols as you comfortably can.'
+        : 'Complete as many symbols as you can in one minute.';
+
+      reset.click();
+    }
+
+    function position(elapsed) {
+      const rect = stage.getBoundingClientRect();
+      const cx = rect.width / 2;
+      const cy = rect.height / 2;
+      const xAmp = rect.width * .34;
+      const yAmp = rect.height * .30;
+      const a = elapsed * (.00025 + speed.value * .0002);
+      let x = 0;
+      let y = 0;
+
+      if (path.value === 'horizontal') x = Math.sin(a) * xAmp;
+      if (path.value === 'vertical') y = Math.sin(a) * yAmp;
+      if (path.value === 'loop') {
+        x = Math.cos(a) * xAmp;
+        y = Math.sin(a) * yAmp;
+      }
+      if (path.value === 'figure8') {
+        x = Math.sin(a) * xAmp;
+        y = Math.sin(a * 2) * yAmp * .55;
+      }
+      if (path.value === 'zigzag') {
+        x = Math.sin(a) * xAmp;
+        y = Math.sin(a * 3) * yAmp * .42;
+      }
+
+      target.style.left = `${cx + x}px`;
+      target.style.top = `${cy + y}px`;
+    }
+
+    function tick(now) {
+      if (!running) return;
+
+      const elapsed = now - startedAt;
+      const remaining = Math.max(0, duration - Math.floor(elapsed / 1000));
+
+      if (exercise.value === 'trace') {
+        let timing = traceTiming(traceCycleIndex);
+
+        while (elapsed - traceCycleStart >= timing.total) {
+          traceCycleStart += timing.total;
+          traceCycleIndex++;
+          score = traceCycleIndex;
+
+          state.textContent = `${score} ${score === 1 ? 'symbol' : 'symbols'} completed`;
+          timing = traceTiming(traceCycleIndex);
+        }
+
+        if (traceCycleIndex !== lastTraceIndex) {
+          lastTraceIndex = traceCycleIndex;
+          traceSymbol(traceCycleIndex);
+        }
+
+        const within = elapsed - traceCycleStart;
+        const p = tracePoint(timing.current, within / timing.drawMs);
+
+        traceDot.setAttribute('cx', p.x);
+        traceDot.setAttribute('cy', p.y);
+      } else if (exercise.value === 'focus') {
+        const pulse = (Math.sin(elapsed * .00155 - Math.PI / 2) + 1) / 2;
+        const size = Math.round(28 + pulse * 62);
+
+        target.style.left = '50%';
+        target.style.top = '50%';
+        target.style.width = `${size}px`;
+        target.style.height = `${size}px`;
+
+        state.textContent = 'Following the size pulse';
+      } else {
+        position(elapsed);
+        target.textContent = 'ABCDEFGH'[Math.floor(elapsed / 1500) % 8];
+      }
+
+      time.textContent = fmt(remaining);
+
+      if (remaining <= 0) {
+        running = false;
+        start.textContent = 'Start session';
+        state.textContent = exercise.value === 'trace'
+          ? `Complete — ${score} symbols traced. Take a rest.`
+          : 'Session complete — take a moment to rest your eyes.';
+        return;
+      }
+
+      raf = requestAnimationFrame(tick);
+    }
+
+    start.addEventListener('click', () => {
+      if (running) {
+        running = false;
+        cancelAnimationFrame(raf);
+        start.textContent = 'Resume session';
+        state.textContent = 'Paused';
+        return;
+      }
+
+      running = true;
+      startedAt = performance.now() - (
+        duration -
+        parseInt(time.textContent.slice(0,2)) * 60 -
+        parseInt(time.textContent.slice(3))
+      ) * 1000;
+
+      start.textContent = 'Pause';
+      state.textContent = 'Following target';
+      raf = requestAnimationFrame(tick);
     });
-    const today=new Date().toDateString(), firstDay=localStorage.getItem('focusPathFirstDay') || today;
-    if(!localStorage.getItem('focusPathFirstDay')) localStorage.setItem('focusPathFirstDay',firstDay);
-    const day=Math.max(1,Math.floor((new Date(today)-new Date(firstDay))/86400000)+1);
-    const plans=day<=3?{level:'Gentle',path:'horizontal',speed:1,seconds:45,name:'side-to-side'}:day<=6?{level:'Gentle',path:'vertical',speed:1,seconds:45,name:'up-and-down'}:day<=10?{level:'Moderate',path:'loop',speed:2,seconds:60,name:'loop'}:day<=14?{level:'Challenge',path:'figure8',speed:2,seconds:60,name:'figure eight'}:{level:'Comfortable',path:'loop',speed:2,seconds:60,name:'loop'};
-    planTitle.textContent=`Day ${day} · ${plans.level} plan`;
-    planDay.textContent=String(day).padStart(2,'0');
-    planDetail.textContent=`${plans.seconds}-second ${plans.name} practice at a comfortable pace.`;
-    planButton.addEventListener('click',()=>{path.value=plans.path;speed.value=plans.speed;duration=plans.seconds;updateSpeed();reset.click();state.textContent='Today’s plan is ready';});
+
+    reset.addEventListener('click', () => {
+      running = false;
+      cancelAnimationFrame(raf);
+
+      score = 0;
+      lastTraceIndex = -1;
+      traceCycleIndex = 0;
+      traceCycleStart = 0;
+      randomTraceCharacters.clear();
+
+      target.style.left = '50%';
+      target.style.top = '50%';
+      target.style.width = '';
+      target.style.height = '';
+      target.textContent = 'A';
+
+      focusCue.innerHTML = 'Follow the center dot<span>It will gently grow and shrink</span>';
+
+      if (exercise.value === 'trace') traceSymbol(0);
+
+      time.textContent = fmt(duration);
+      start.textContent = 'Start session';
+      state.textContent = 'Ready when you are';
+    });
+
+    function updateSpeed() {
+      speedValue.value = [
+        'Very slow',
+        'Slow',
+        'Medium',
+        'Fast',
+        'Very fast',
+        'Expert',
+        'Advanced',
+        'Master'
+      ][speed.value - 1];
+    }
+
+    speed.addEventListener('input', updateSpeed);
+
+    background.addEventListener('change', () => {
+      stage.classList.remove('bg-warm','bg-cool','bg-dim','bg-white');
+      if (background.value !== 'soft') stage.classList.add('bg-' + background.value);
+    });
+
+    exercise.addEventListener('change', updateExercise);
+    traceMode.addEventListener('change', updateExercise);
+
+    symbols.addEventListener('change', () => {
+      randomTraceCharacters.clear();
+      lastTraceIndex = -1;
+      traceSymbol(0);
+    });
+
+    order.addEventListener('change', () => {
+      randomTraceCharacters.clear();
+      lastTraceIndex = -1;
+      traceSymbol(0);
+    });
+
+    restStart.addEventListener('click', () => {
+      clearInterval(restTimer);
+
+      const steps = [
+        ['Blink slowly and fully', 10],
+        ['Look at something across the room', 20],
+        ['Rest your eyes closed while seated', 10]
+      ];
+
+      let i = 0;
+      let left = steps[0][1];
+
+      restStart.disabled = true;
+      restStart.textContent = 'In progress';
+
+      const render = () => {
+        restStep.textContent = `${steps[i][0]} — ${left}s`;
+      };
+
+      render();
+
+      restTimer = setInterval(() => {
+        left--;
+
+        if (left < 0) {
+          i++;
+
+          if (i === steps.length) {
+            clearInterval(restTimer);
+            restStep.textContent = 'Break complete. Resume only when your eyes feel comfortable.';
+            restStart.disabled = false;
+            restStart.textContent = 'Start break';
+            return;
+          }
+
+          left = steps[i][1];
+        }
+
+        render();
+      }, 1000);
+    });
+
+    const today = new Date().toDateString();
+    const firstDay = localStorage.getItem('focusPathFirstDay') || today;
+
+    if (!localStorage.getItem('focusPathFirstDay')) {
+      localStorage.setItem('focusPathFirstDay', firstDay);
+    }
+
+    const day = Math.max(1, Math.floor((new Date(today) - new Date(firstDay)) / 86400000) + 1);
+
+    const plans = day <= 3
+      ? { level:'Gentle', path:'horizontal', speed:1, seconds:45, name:'side-to-side' }
+      : day <= 6
+        ? { level:'Gentle', path:'vertical', speed:1, seconds:45, name:'up-and-down' }
+        : day <= 10
+          ? { level:'Moderate', path:'loop', speed:2, seconds:60, name:'loop' }
+          : day <= 14
+            ? { level:'Challenge', path:'figure8', speed:2, seconds:60, name:'figure eight' }
+            : { level:'Comfortable', path:'loop', speed:2, seconds:60, name:'loop' };
+
+    planTitle.textContent = `Day ${day} · ${plans.level} plan`;
+    planDay.textContent = String(day).padStart(2,'0');
+    planDetail.textContent = `${plans.seconds}-second ${plans.name} practice at a comfortable pace.`;
+
+    planButton.addEventListener('click', () => {
+      path.value = plans.path;
+      speed.value = plans.speed;
+      duration = plans.seconds;
+      updateSpeed();
+      reset.click();
+      state.textContent = 'Today’s plan is ready';
+    });
+
     updateSpeed();
   </script>
 </body>
